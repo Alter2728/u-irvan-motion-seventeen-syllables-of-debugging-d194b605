@@ -22,10 +22,18 @@ HAIKU = (
 
 
 def main() -> None:
+    lines = HAIKU.split("\n")
+    assert len(lines) == 3, "haiku must be exactly three lines"
+    assert all(line.strip() for line in lines), "no line may be blank"
+    assert 1 <= len(HAIKU) <= 200, "entry must be 1-200 characters"
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
-    with open(os.path.join(out_dir, "entry.txt"), "w", encoding="utf-8") as f:
+    path = os.path.join(out_dir, "entry.txt")
+    with open(path, "w", encoding="utf-8") as f:
         f.write(HAIKU)
+    # Read back and confirm the file holds exactly what was intended.
+    with open(path, encoding="utf-8") as f:
+        assert f.read() == HAIKU, "entry.txt does not match the haiku"
 
 
 if __name__ == "__main__":
